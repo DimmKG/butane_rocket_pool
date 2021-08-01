@@ -1,0 +1,16 @@
+[package]
+name = "butane_rocket_pool"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+r2d2 = "0.8.9"
+serde = "1.0"
+serde_derive = "1.0"
+rocket_sync_db_pools = "0.1.0-rc.1"
+
+[dependencies.butane]
+version = "0.4.1"
+features = ["r2d2"]
