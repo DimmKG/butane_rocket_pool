@@ -4,8 +4,17 @@ use rocket_sync_db_pools::{Poolable, PoolResult};
 use butane::db::ConnectionSpec;
 use r2d2::ManageConnection;
 use serde::Deserialize;
+use std::ops::Deref;
 
-pub struct Connection(butane::db::Connection);
+pub struct Connection(pub butane::db::Connection);
+
+impl Deref for Connection {
+    type Target = butane::db::Connection;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 pub struct ConnectionManager(butane::db::ConnectionManager);
 
@@ -84,4 +93,3 @@ impl Poolable for Connection {
         Ok(r2d2::Pool::builder().max_size(config.pool_size).build(manager)?)
     }
 }
-
