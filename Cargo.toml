@@ -3,7 +3,6 @@ name = "butane_rocket_pool"
 version = "0.5.0"
 edition = "2018"
 license = "MIT"
-license-file = "LICENSE"
 description = "Butane database adapter for Rocket framework"
 keywords = ["rocket", "butane", "database"]
 readme = "README.md"
