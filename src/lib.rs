@@ -6,7 +6,7 @@ use r2d2::ManageConnection;
 use serde::Deserialize;
 use std::ops::Deref;
 
-pub struct Connection(pub butane::db::Connection);
+pub struct Connection(butane::db::Connection);
 
 impl Deref for Connection {
     type Target = butane::db::Connection;
