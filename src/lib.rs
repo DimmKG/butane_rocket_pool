@@ -1,3 +1,54 @@
+//! Butane database adapter for Rocket framework
+//! 
+//! # Usage
+//! 
+//!   1. Configure your database in `Rocket.toml`. Parameters `url` and `backend_name` are required.
+//! ```toml
+//! [default.databases.test]
+//! backend_name = "sqlite" #Butane's backend name
+//! url = "test.db"
+//! ```
+//! 
+//!   2. Add and init database in your application's code
+//! ```
+//! #[database("test")]
+//! struct DbConn(butane_rocket_pool::Connection); 
+//! 
+//! #[launch]
+//! fn rocket() -> _ {
+//!     rocket::build().mount("/", routes![create])
+//!     .attach(DbConn::fairing())
+//! }
+//! ```
+//! 
+//!   3. To use the connection with Butane functions apply two dereference operators.
+//! 
+//! ```
+//! #[post("/", data = "<post>")]
+//! async fn create(db: DbConn, post: Json<Post>) -> (Status, Value) {
+//!     let result = db.run(move |db| -> Result<Post, butane::Error> {
+//!         let mut result = post.0;
+//!         match result.save(&**db) {
+//!             Ok(_) => (),
+//!             Err(err) => return Err(err)
+//!         };
+//!         Post::get(&**db, result.id)
+//!     }).await;
+//! 
+//!     match result {
+//!         Ok(res) => (Status::Created, json!({
+//!             "message" : "Post is created!",
+//!             "data" : res
+//!         })),
+//!         Err(err) => (Status::InternalServerError, json!({
+//!             "message" : "Can't create post!",
+//!             "error" : format!("{}", err)
+//!         }))
+//!     }
+//! }
+//! ```
+//! 
+
 use rocket_sync_db_pools::rocket::{Rocket, Build, Config};
 use rocket_sync_db_pools::rocket::figment::{self,Figment, providers::Serialized};
 use rocket_sync_db_pools::{Poolable, PoolResult};
@@ -6,6 +57,39 @@ use r2d2::ManageConnection;
 use serde::Deserialize;
 use std::ops::Deref;
 
+/// R2D2 connection which supports Rocket.
+/// 
+/// To use it with Butane functions apply two dereference operators to the connection.
+/// 
+/// Example:
+/// ```
+/// #[database("test")]
+/// struct Db(butane_rocket_pool::Connection); 
+/// 
+/// #[post("/", data = "<post>")]
+/// async fn create(db: Db, post: Json<Post>) -> (Status, Value) {
+///     let result = db.run(move |db| -> Result<Post, butane::Error> {
+///         let mut result = post.0;
+///         match result.save(&**db) {
+///             Ok(_) => (),
+///             Err(err) => return Err(err)
+///         };
+/// 
+///         Post::get(&**db, result.id)
+///     }).await;
+///
+///     match result {
+///         Ok(res) => (Status::Created, json!({
+///             "message" : "Post is created!",
+///             "data" : res
+///         })),
+///         Err(err) => (Status::InternalServerError, json!({
+///             "message" : "Can't create post!",
+///             "error" : format!("{}", err)
+///         }))
+///     }
+/// }
+/// ```
 pub struct Connection(butane::db::Connection);
 
 impl Deref for Connection {
@@ -16,6 +100,8 @@ impl Deref for Connection {
     }
 }
 
+/// R2D2 connection manager which supports Rocket.
+/// Not expected to be used directly by most users.
 pub struct ConnectionManager(butane::db::ConnectionManager);
 
 impl ConnectionManager {
@@ -24,9 +110,8 @@ impl ConnectionManager {
     }
 }
 
-
 #[derive(Deserialize)]
-pub struct DBConfig {
+struct DBConfig {
     pub backend_name: String,
     pub url: String,
     pub pool_size: u32,
@@ -38,7 +123,7 @@ impl DBConfig {
         DBConfig::figment(db_name, rocket).extract::<Self>()
     }
 
-    pub fn figment(db_name: &str, rocket: &Rocket<Build>) -> Figment {
+    fn figment(db_name: &str, rocket: &Rocket<Build>) -> Figment {
         let db_key = format!("databases.{}", db_name);
         let default_pool_size = rocket.figment()
             .extract_inner::<u32>(Config::WORKERS)
