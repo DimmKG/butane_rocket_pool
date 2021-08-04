@@ -28,10 +28,7 @@
 //! async fn create(db: DbConn, post: Json<Post>) -> (Status, Value) {
 //!     let result = db.run(move |db| -> Result<Post, butane::Error> {
 //!         let mut result = post.0;
-//!         match result.save(&**db) {
-//!             Ok(_) => (),
-//!             Err(err) => return Err(err)
-//!         };
+//!         result.save(&**db)?;
 //!         Post::get(&**db, result.id)
 //!     }).await;
 //! 
@@ -70,11 +67,7 @@ use std::ops::Deref;
 /// async fn create(db: Db, post: Json<Post>) -> (Status, Value) {
 ///     let result = db.run(move |db| -> Result<Post, butane::Error> {
 ///         let mut result = post.0;
-///         match result.save(&**db) {
-///             Ok(_) => (),
-///             Err(err) => return Err(err)
-///         };
-/// 
+///         result.save(&**db)?;
 ///         Post::get(&**db, result.id)
 ///     }).await;
 ///
