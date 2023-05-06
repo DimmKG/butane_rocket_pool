@@ -1,20 +1,15 @@
-[package]
-name = "butane_rocket_pool"
-version = "0.5.0"
-edition = "2018"
-license = "MIT"
-description = "Butane database adapter for Rocket framework"
-keywords = ["rocket", "butane", "database"]
-readme = "README.md"
-repository = "https://github.com/DimmKG/butane_rocket_pool"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace]
 
-[dependencies]
-r2d2 = "0.8.9"
-serde = "1.0"
-serde_derive = "1.0"
-rocket_sync_db_pools = "0.1.0-rc.1"
+members = [
+    "lib",
+    "example"
+]
 
-[dependencies.butane]
-version = "0.4.1"
+[workspace.dependencies]
+r2d2 = "0.8.10"
+serde = { version = "1.0", features = ["derive"] }
+rocket_sync_db_pools = "0.1.0-rc.3"
+
+[workspace.dependencies.butane]
+version = "0.5.1"
 features = ["r2d2"]

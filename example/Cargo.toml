@@ -1,0 +1,14 @@
+[package]
+name = "rocket-butane"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket = { version = "0.5.0-rc.3", features = ['json'] }
+butane = {version = "0.5.1", features = ['r2d2', 'sqlite']}
+butane_rocket_pool = { path = "../lib" }
+rocket_sync_db_pools = "0.1.0-rc.3"
+serde = {version = "1.0", features = ['derive']}

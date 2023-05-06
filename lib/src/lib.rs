@@ -108,7 +108,6 @@ struct DBConfig {
     pub backend_name: String,
     pub url: String,
     pub pool_size: u32,
-    pub timeout: u8,
 }
 
 impl DBConfig {
@@ -166,6 +165,7 @@ impl Poolable for Connection {
         let specs = ConnectionSpec{
             backend_name: config.backend_name,
             conn_str: config.url
+            
         };
         let manager = ConnectionManager::new(specs);
         Ok(r2d2::Pool::builder().max_size(config.pool_size).build(manager)?)

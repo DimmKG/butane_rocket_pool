@@ -1,0 +1,3 @@
+[default.databases.test]
+backend_name = "sqlite" #Butane's backend name
+url = "test.db"
