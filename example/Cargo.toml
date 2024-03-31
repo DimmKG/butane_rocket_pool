@@ -8,7 +8,7 @@ publish = false
 
 [dependencies]
 rocket = { version = "0.5.0-rc.3", features = ['json'] }
-butane = { workspace = true, features = ['r2d2', 'sqlite']}
+butane = { workspace = true, features = ['r2d2', 'sqlite'] }
 butane_rocket_pool = { path = "../lib" }
 rocket_sync_db_pools = "0.1.0-rc.3"
-serde = {version = "1.0", features = ['derive']}
+serde = { version = "1.0", features = ['derive'] }
