@@ -1,5 +1,4 @@
 [package]
-path = "src/lib.rs"
 name = "butane_rocket_pool"
 version = "0.5.2"
 edition = "2018"
@@ -11,7 +10,7 @@ repository = "https://github.com/DimmKG/butane_rocket_pool"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-r2d2 = {workspace = true}
-serde = {workspace = true}
-rocket_sync_db_pools = {workspace = true}
-butane = {workspace = true}
+r2d2 = { workspace = true }
+serde = { workspace = true }
+rocket_sync_db_pools = { workspace = true }
+butane = { workspace = true }

@@ -4,7 +4,7 @@ use butane::model;
 use butane::prelude::*;
 use rocket::http::Status;
 use rocket::serde::json::{Value, json};
-use rocket_sync_db_pools::{database};
+use rocket_sync_db_pools::database;
 use rocket::serde::{json::Json};
 use serde::Deserialize;
 use serde::Serialize;
