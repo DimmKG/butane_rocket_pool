@@ -6,7 +6,7 @@ members = ["lib", "example"]
 [workspace.dependencies]
 r2d2 = "0.8.10"
 serde = { version = "1.0", features = ["derive"] }
-rocket_sync_db_pools = "0.1.0-rc.3"
+rocket_sync_db_pools = "0.1.0"
 
 [workspace.dependencies.butane]
 version = "0.6.1"
